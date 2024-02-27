@@ -1,18 +1,10 @@
-import { RequestHandler } from "express";
 import { db } from "../datastore";
-import { Post } from "../types";
 import crypto from "crypto";
-
-type ExpressHandler<Req, Res> = RequestHandler<
-  string,
-  Partial<Res>,
-  Partial<Req>,
-  any
->;
-
-type CreatePostRequest = Pick<Post, "url" | "title" | "userId">;
-
-interface CreatePostResponse {}
+import {
+  CreatePostRequest,
+  CreatePostResponse,
+  ExpressHandler,
+} from "../types";
 
 export const listPostsHandler: ExpressHandler<{}, {}> = (req, res) => {
   res.send({ posts: db.listPosts() });
