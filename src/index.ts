@@ -1,20 +1,15 @@
 import express from "express";
-import { db } from "./datastore/index";
+import { loggerMiddleware } from "./middlewares/loggerMiddleware";
+import { createPostHandler, listPostsHandler } from "./handlers/postHandler";
 
 const app = express();
+const PORT = 3000;
 
 app.use(express.json());
+app.use(loggerMiddleware);
 
-app.get("/posts", (req, res) => {
-  res.send({ posts: db.listPosts() });
-});
+app.get("/posts", listPostsHandler);
 
-app.post("/posts", (req, res) => {
-  const post = req.body;
+app.post("/posts", createPostHandler);
 
-  db.createPost(post);
-
-  res.sendStatus(200);
-});
-
-app.listen(3000, () => console.log("Server running on port 3000"));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
