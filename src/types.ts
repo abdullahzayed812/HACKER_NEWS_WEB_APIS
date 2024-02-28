@@ -36,7 +36,3 @@ export type ExpressHandler<Req, Res> = RequestHandler<
   Partial<Req>,
   any
 >;
-
-export type CreatePostRequest = Pick<Post, "url" | "title" | "userId">;
-
-export interface CreatePostResponse {}
