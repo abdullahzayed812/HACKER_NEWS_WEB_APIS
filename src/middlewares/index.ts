@@ -5,15 +5,8 @@ export const requestLoggerMiddleware: RequestHandler = (req, res, next) => {
   next();
 };
 
-export const errorHandlerMiddleware: ErrorRequestHandler = (
-  err,
-  req,
-  res,
-  next
-) => {
+export const errorHandlerMiddleware: ErrorRequestHandler = (err, req, res, next) => {
   console.log("Uncaught exxeption: ", err);
 
-  return res
-    .status(500)
-    .send("Oops, an unexpected error occured, please try again.");
+  return res.status(500).send("Oops, an unexpected error occured, please try again.");
 };

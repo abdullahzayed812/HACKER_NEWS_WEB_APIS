@@ -1,20 +1,17 @@
 import { db } from "../datastore";
 import crypto from "crypto";
-import { ExpressHandler, Post } from "../types";
+import { ExpressHandler } from "../types";
 import { requestPostDataValidation } from "../utilities";
-
-export type CreatePostRequest = Pick<Post, "url" | "title" | "userId">;
-
-export interface CreatePostResponse {}
+import { CreatePostRequest, CreatePostResponse } from "../api";
 
 export const listPostsHandler: ExpressHandler<{}, {}> = (req, res) => {
   res.send({ posts: db.listPosts() });
 };
 
-export const createPostHandler: ExpressHandler<
-  CreatePostRequest,
-  CreatePostResponse
-> = (req, res) => {
+export const createPostHandler: ExpressHandler<CreatePostRequest, CreatePostResponse> = (
+  req,
+  res
+) => {
   const { url, title, userId } = req.body;
 
   requestPostDataValidation(res, title, url, userId);
