@@ -4,11 +4,11 @@ import { ExpressHandler } from "../types";
 import { requestPostDataValidation } from "../utilities";
 import { CreatePostRequest, CreatePostResponse } from "../api";
 
-export const listPostsHandler: ExpressHandler<{}, {}> = (req, res) => {
-  res.send({ posts: db.listPosts() });
+export const listPostsHandler: ExpressHandler<{}, {}> = async (req, res) => {
+  res.send({ posts: await db.listPosts() });
 };
 
-export const createPostHandler: ExpressHandler<CreatePostRequest, CreatePostResponse> = (
+export const createPostHandler: ExpressHandler<CreatePostRequest, CreatePostResponse> = async (
   req,
   res
 ) => {
@@ -28,7 +28,7 @@ export const createPostHandler: ExpressHandler<CreatePostRequest, CreatePostResp
     userId,
   };
 
-  db.createPost(post);
+  await db.createPost(post);
 
   res.sendStatus(200);
 };

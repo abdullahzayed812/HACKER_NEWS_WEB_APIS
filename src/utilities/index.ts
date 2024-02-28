@@ -10,7 +10,7 @@ export const requestPostDataValidation = (
     return res.send(400).send("Post title field is required.");
   } else if (!url) {
     return res.status(400).send("Post url field is required. ");
-  } else {
+  } else if (!userId) {
     return res.status(400).send("Post user id is required.");
   }
 };
