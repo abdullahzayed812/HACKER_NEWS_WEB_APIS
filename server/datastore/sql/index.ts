@@ -23,21 +23,41 @@ export class SqlDatastore implements DataStore {
     return this;
   }
 
-  createUser(user: User): Promise<void> {
-    throw new Error("Method not implemented.");
+  async createUser(user: User): Promise<void> {
+    await this.db.run(
+      "INSERT INTO users (id, email, password, username, firstName, lastName) VALUES (?,?,?,?,?,?)",
+      user.id,
+      user.email,
+      user.password,
+      user.username,
+      user.firstName,
+      user.lastName
+    );
   }
-  getUserByEmail(email: string): Promise<User> {
-    throw new Error("Method not implemented.");
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return await this.db.get<User | undefined>("SELECT * FROM users WHERE email = ?", email);
   }
-  getUserByUsername(username: string): Promise<User> {
-    throw new Error("Method not implemented.");
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return await this.db.get<User | undefined>("SELECT * FROM users WHERE username = ?", username);
   }
-  createPost(post: Post): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async createPost(post: Post): Promise<void> {
+    await this.db.run(
+      "INSERT INTO posts (id, title, url, userId, postedAt) VALUES (?,?,?,?,?)",
+      post.id,
+      post.title,
+      post.url,
+      post.userId,
+      post.postedAt
+    );
   }
-  listPosts(): Promise<Post[]> {
-    throw new Error("Method not implemented.");
+
+  async listPosts(): Promise<Post[]> {
+    return await this.db.all<Post[]>("SELECT * FROM posts");
   }
+
   getPost(postId: string): Promise<Post> {
     throw new Error("Method not implemented.");
   }
