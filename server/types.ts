@@ -31,3 +31,7 @@ export interface Comment {
 }
 
 export type ExpressHandler<Req, Res> = RequestHandler<string, Partial<Res>, Partial<Req>, any>;
+
+export interface JwtPayload {
+  userId: string;
+}

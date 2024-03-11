@@ -3,7 +3,7 @@ import { db } from "../datastore";
 import { ExpressHandler, User } from "../types";
 import crypto from "crypto";
 
-export const signUpHander: ExpressHandler<SignUpRequest, SignUpRepose> = async (req, res) => {
+export const signUpHandler: ExpressHandler<SignUpRequest, SignUpRepose> = async (req, res) => {
   const { email, username, password, firstName, lastName } = req.body;
 
   if (!email || !username || !password || !firstName || !lastName) {
@@ -23,7 +23,7 @@ export const signUpHander: ExpressHandler<SignUpRequest, SignUpRepose> = async (
   return res.status(200).send("User created successfully.");
 };
 
-export const signInHander: ExpressHandler<SignInRequest, SignInResponse> = async (req, res) => {
+export const signInHandler: ExpressHandler<SignInRequest, SignInResponse> = async (req, res) => {
   const { login, password } = req.body;
 
   if (!login || !password) {

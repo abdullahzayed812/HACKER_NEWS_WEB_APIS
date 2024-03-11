@@ -3,10 +3,13 @@ import { errorHandlerMiddleware, requestLoggerMiddleware } from "./middlewares";
 import { createPostHandler, listPostsHandler } from "./handlers/postHandler";
 import expressAsyncHandler from "express-async-handler";
 import { initDb } from "./datastore";
-import { signInHander, signUpHander } from "./handlers/userHandler";
+import { signInHandler, signUpHandler } from "./handlers/authHandler";
+import dotenv from "dotenv";
 
 (async () => {
   await initDb();
+
+  dotenv.config();
 
   const app = express();
   const PORT = 3000;
@@ -17,8 +20,8 @@ import { signInHander, signUpHander } from "./handlers/userHandler";
   app.get("/v1/posts", expressAsyncHandler(listPostsHandler));
   app.post("/v1/posts", expressAsyncHandler(createPostHandler));
 
-  app.post("/v1/signUp", expressAsyncHandler(signUpHander));
-  app.post("/v1/signIn", expressAsyncHandler(signInHander));
+  app.post("/v1/signUp", expressAsyncHandler(signUpHandler));
+  app.post("/v1/signIn", expressAsyncHandler(signInHandler));
 
   app.use(errorHandlerMiddleware);
 
