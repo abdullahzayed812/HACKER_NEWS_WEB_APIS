@@ -1,4 +1,5 @@
 import { SignInRequest, SignInResponse, SignUpRepose, SignUpRequest } from "../api";
+import { signJwt, verifyJwt } from "../auth";
 import { db } from "../datastore";
 import { ExpressHandler, User } from "../types";
 import crypto from "crypto";
@@ -7,20 +8,22 @@ export const signUpHandler: ExpressHandler<SignUpRequest, SignUpRepose> = async 
   const { email, username, password, firstName, lastName } = req.body;
 
   if (!email || !username || !password || !firstName || !lastName) {
-    return res.status(400).send("All fields are required.");
+    return res.status(400).send({ error: "All fields are required." });
   }
 
   const userExists = (await db.getUserByEmail(email)) || (await db.getUserByUsername(username));
 
   if (userExists) {
-    return res.status(403).send("User already exists.");
+    return res.status(403).send({ error: "User already exists." });
   }
 
   const user: User = { id: crypto.randomUUID(), email, username, password, firstName, lastName };
 
   await db.createUser(user);
 
-  return res.status(200).send("User created successfully.");
+  const jwt = signJwt({ userId: user.id });
+
+  return res.status(200).send({ accessToken: jwt });
 };
 
 export const signInHandler: ExpressHandler<SignInRequest, SignInResponse> = async (req, res) => {
@@ -36,6 +39,8 @@ export const signInHandler: ExpressHandler<SignInRequest, SignInResponse> = asyn
     return res.sendStatus(403);
   }
 
+  const jwt = signJwt({ userId: userExists.id });
+
   return res.status(200).send({
     user: {
       id: userExists.id,
@@ -44,5 +49,6 @@ export const signInHandler: ExpressHandler<SignInRequest, SignInResponse> = asyn
       lastName: userExists.lastName,
       username: userExists.username,
     },
+    accessToken: jwt,
   });
 };

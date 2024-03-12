@@ -1,8 +1,10 @@
 import { JwtPayload } from "./types";
-import { sign, verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+
+const { sign, verify } = jwt;
 
 export function signJwt(payload: JwtPayload): string {
-  return sign(payload, getJwtSecret());
+  return sign(payload, getJwtSecret(), { expiresIn: "3d" });
 }
 
 export function verifyJwt(token: string): JwtPayload {

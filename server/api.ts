@@ -3,7 +3,7 @@ import { Post, User } from "./types";
 // Post APIs
 export interface ListPostsRequest {}
 export interface ListPostsResponse {
-  post: Post[];
+  posts: Post[];
 }
 
 export type CreatePostRequest = Pick<Post, "url" | "title" | "userId">;
@@ -12,7 +12,7 @@ export interface CreatePostResponse {}
 export interface GetPostRequest {
   post: Post;
 }
-export interface GetPostRespose {}
+export interface GetPostResponse {}
 
 // Comment APIs
 
@@ -23,7 +23,9 @@ export type SignUpRequest = Pick<
   User,
   "email" | "firstName" | "lastName" | "password" | "username"
 >;
-export interface SignUpRepose {}
+export interface SignUpRepose {
+  accessToken: string;
+}
 
 export interface SignInRequest {
   login: string; // username or email
@@ -32,4 +34,5 @@ export interface SignInRequest {
 
 export type SignInResponse = {
   user: Pick<User, "id" | "email" | "firstName" | "lastName" | "username">;
+  accessToken: string;
 };

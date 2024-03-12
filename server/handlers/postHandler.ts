@@ -2,9 +2,12 @@ import { db } from "../datastore";
 import crypto from "crypto";
 import { ExpressHandler } from "../types";
 import { requestPostDataValidation } from "../utilities";
-import { CreatePostRequest, CreatePostResponse } from "../api";
+import { CreatePostRequest, CreatePostResponse, ListPostsRequest, ListPostsResponse } from "../api";
 
-export const listPostsHandler: ExpressHandler<{}, {}> = async (req, res) => {
+export const listPostsHandler: ExpressHandler<ListPostsRequest, ListPostsResponse> = async (
+  req,
+  res
+) => {
   res.send({ posts: await db.listPosts() });
 };
 
