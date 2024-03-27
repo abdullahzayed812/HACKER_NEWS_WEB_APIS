@@ -17,6 +17,8 @@ export const authMiddleware: ExpressHandler<any, any> = async (req, res, next) =
       throw new Error("User not found.");
     }
 
+    res.locals.userId = userId;
+
     next();
   } catch (error) {
     console.error(error);

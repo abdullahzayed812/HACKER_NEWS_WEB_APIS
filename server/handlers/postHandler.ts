@@ -17,7 +17,7 @@ export const createPostHandler: ExpressHandler<CreatePostRequest, CreatePostResp
 ) => {
   const { url, title, userId } = req.body;
 
-  requestPostDataValidation(res, title, url, userId);
+  requestPostDataValidation(res, title, url);
 
   if (!url || !title || !userId) {
     return res.sendStatus(400);
@@ -28,7 +28,7 @@ export const createPostHandler: ExpressHandler<CreatePostRequest, CreatePostResp
     postedAt: Date.now(),
     url,
     title,
-    userId,
+    userId: res.locals.userId,
   };
 
   await db.createPost(post);
