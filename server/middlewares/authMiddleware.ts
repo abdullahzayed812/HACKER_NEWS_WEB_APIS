@@ -10,7 +10,7 @@ export const authMiddleware: ExpressHandler<any, any> = async (req, res, next) =
   }
 
   try {
-    const { userId } = verifyJwt(token);
+    const { userId } = verifyJwt(token!);
     const user = await db.getUserById(userId);
 
     if (!user) {

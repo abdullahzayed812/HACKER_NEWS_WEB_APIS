@@ -61,5 +61,5 @@ export const signInHandler: ExpressHandler<SignInRequest, SignInResponse> = asyn
 };
 
 function hashPassword(password: string): string {
-  return crypto.pbkdf2Sync(password, process.env.PASSWORD_SALT, 100, 64, "sha512").toString("hex");
+  return crypto.pbkdf2Sync(password, process.env.PASSWORD_SALT!, 100, 64, "sha512").toString("hex");
 }
