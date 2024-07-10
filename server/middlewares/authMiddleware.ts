@@ -1,12 +1,12 @@
-import { verifyJwt } from "../auth";
+import { verifyJwt } from "../utilities/auth";
 import { db } from "../datastore";
-import { ExpressHandler } from "../types";
+import { ExpressHandler } from "../types/api";
 
 export const authMiddleware: ExpressHandler<any, any> = async (req, res, next) => {
   const token = req.headers.authorization;
 
   if (!token) {
-    res.sendStatus(401);
+    res.status(401).send({ error: "No token exist, please check it and try again." });
   }
 
   try {

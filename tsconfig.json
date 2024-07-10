@@ -5,11 +5,14 @@
     "target": "es2021",
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist"
+    "outDir": "./dist"
   },
   "lib": ["es2021"],
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node"
-  }
+  },
+  "include": [
+    "./server/**/*.ts" // adjust this path to match your directory structure
+  ]
 }

@@ -1,7 +1,13 @@
-import { SignInRequest, SignInResponse, SignUpRepose, SignUpRequest } from "../api";
-import { signJwt, verifyJwt } from "../auth";
+import {
+  ExpressHandler,
+  SignInRequest,
+  SignInResponse,
+  SignUpRepose,
+  SignUpRequest,
+} from "../types/api";
+import { signJwt } from "../utilities/auth";
 import { db } from "../datastore";
-import { ExpressHandler, User } from "../types";
+import { User } from "../types";
 import crypto from "crypto";
 
 export const signUpHandler: ExpressHandler<SignUpRequest, SignUpRepose> = async (req, res) => {

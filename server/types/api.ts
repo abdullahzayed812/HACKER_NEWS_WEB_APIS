@@ -1,4 +1,14 @@
-import { Post, User } from "./types";
+import { RequestHandler } from "express";
+import { Post, User } from ".";
+
+export type WithError<T> = T & { error: string };
+
+export type ExpressHandler<Req, Res> = RequestHandler<
+  string,
+  Partial<WithError<Res>>,
+  Partial<Req>,
+  any
+>;
 
 // Post APIs
 export interface ListPostsRequest {}
