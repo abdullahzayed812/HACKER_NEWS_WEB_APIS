@@ -45,6 +45,7 @@ export class InMemoryDatastore implements DataStore {
     }
 
     this.posts.splice(index, 1);
+    return Promise.resolve();
   }
 
   createLike(like: Like): Promise<void> {
@@ -69,5 +70,6 @@ export class InMemoryDatastore implements DataStore {
     }
 
     this.comments.splice(index, 1);
+    return Promise.resolve();
   }
 }

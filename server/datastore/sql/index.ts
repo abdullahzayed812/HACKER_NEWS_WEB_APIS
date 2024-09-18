@@ -8,7 +8,7 @@ import path from "path";
 const __dirname = path.resolve();
 
 export class SqlDatastore implements DataStore {
-  private db: Database<sqlite3.Database, sqlite3.Statement>;
+  private db!: Database<sqlite3.Database, sqlite3.Statement>;
 
   public async openDb() {
     this.db = await sqliteOpen({
