@@ -2,7 +2,7 @@ import sqlite3 from "sqlite3";
 import { Database, open as sqliteOpen } from "sqlite";
 
 import { DataStore } from "..";
-import { User, Post, Like, Comment } from "../../types";
+import { User, Post, Like, Comment } from "../../types/entities";
 
 import path from "path";
 const __dirname = path.resolve();

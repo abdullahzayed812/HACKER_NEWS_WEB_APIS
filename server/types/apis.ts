@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { Post, User } from ".";
+import { Post, User } from "./entities";
 
 export type WithError<T> = T & { error: string };
 
@@ -16,7 +16,7 @@ export interface ListPostsResponse {
   posts: Post[];
 }
 
-export type CreatePostRequest = Pick<Post, "url" | "title" | "userId">;
+export type CreatePostRequest = Pick<Post, "url" | "title">;
 export interface CreatePostResponse {}
 
 export interface GetPostRequest {

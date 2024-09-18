@@ -7,7 +7,7 @@ import {
   ExpressHandler,
   ListPostsRequest,
   ListPostsResponse,
-} from "../types/api";
+} from "../types/apis";
 
 export const listPostsHandler: ExpressHandler<ListPostsRequest, ListPostsResponse> = async (
   req,
@@ -20,9 +20,11 @@ export const createPostHandler: ExpressHandler<CreatePostRequest, CreatePostResp
   req,
   res
 ) => {
-  const { url, title, userId } = req.body;
+  const { url, title } = req.body;
 
   requestPostDataValidation(res, title, url);
+
+  const userId = res.locals.userId;
 
   if (!url || !title || !userId) {
     return res.sendStatus(400); // Bad request

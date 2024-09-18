@@ -1,4 +1,4 @@
-import { User, Post, Like, Comment } from "../../types";
+import { User, Post, Like, Comment } from "../../types/entities";
 import { DataStore } from "../index";
 
 export class InMemoryDatastore implements DataStore {

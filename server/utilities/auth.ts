@@ -1,4 +1,4 @@
-import { JwtPayload } from "../types";
+import { JwtPayload } from "../types/entities";
 import jwt from "jsonwebtoken";
 
 const { sign, verify } = jwt;

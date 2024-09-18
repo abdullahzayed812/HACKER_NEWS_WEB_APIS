@@ -1,4 +1,4 @@
-import { User } from "../../types";
+import { User } from "../../types/entities";
 
 export interface UserDao {
   createUser(user: User): Promise<void>;
