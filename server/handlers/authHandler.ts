@@ -43,13 +43,17 @@ export const signInHandler: ExpressHandler<SignInRequest, SignInResponse> = asyn
   const { login, password } = req.body;
 
   if (!login || !password) {
-    return res.sendStatus(400);
+    return res.status(400).send({ error: "Invalid user data, try again." });
   }
 
   const userExists = (await db.getUserByEmail(login)) || (await db.getUserByUsername(login));
 
-  if (!userExists || userExists.password !== hashPassword(password)) {
-    return res.sendStatus(403);
+  if (!userExists) {
+    return res.status(400).send({ error: "User not exists, sing up..." });
+  }
+
+  if (userExists.password !== hashPassword(password)) {
+    return res.status(403).send({ error: "Incorrect password..." });
   }
 
   const jwt = signJwt({ userId: userExists.id });
