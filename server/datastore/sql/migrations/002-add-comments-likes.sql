@@ -13,5 +13,5 @@ CREATE TABLE likes (
   postId VARCHAR NOT NULL,
   FOREIGN KEY (userId) REFERENCES users (id),
   FOREIGN KEY (postId) REFERENCES posts (id),
-  PRIMARY KEY (userId, postId);
+  PRIMARY KEY (userId, postId)
 );

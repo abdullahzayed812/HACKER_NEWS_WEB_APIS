@@ -1,5 +1,6 @@
 import { JwtPayload } from "../types/entities";
 import jwt from "jsonwebtoken";
+import { getJwtSecret } from "./env";
 
 const { sign, verify } = jwt;
 
@@ -9,15 +10,4 @@ export function signJwt(payload: JwtPayload): string {
 
 export function verifyJwt(token: string): JwtPayload {
   return verify(token, getJwtSecret()) as JwtPayload;
-}
-
-function getJwtSecret(): string {
-  const secret = process.env.JWT_SECRET;
-
-  if (!secret) {
-    console.error("Missing Jwt secret.");
-    process.exit(1);
-  }
-
-  return secret;
 }

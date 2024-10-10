@@ -9,6 +9,7 @@ import { signJwt } from "../utilities/auth";
 import { db } from "../datastore";
 import { User } from "../types/entities";
 import crypto from "crypto";
+import { getSalt } from "utilities/env";
 
 export const signUpHandler: ExpressHandler<SignUpRequest, SignUpRepose> = async (req, res) => {
   const { email, username, password, firstName, lastName } = req.body;
@@ -71,5 +72,5 @@ export const signInHandler: ExpressHandler<SignInRequest, SignInResponse> = asyn
 };
 
 function hashPassword(password: string): string {
-  return crypto.pbkdf2Sync(password, process.env.PASSWORD_SALT!, 100, 64, "sha512").toString("hex");
+  return crypto.pbkdf2Sync(password, getSalt(), 100, 64, "sha512").toString("hex");
 }

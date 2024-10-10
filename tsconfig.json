@@ -12,6 +12,6 @@
     "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file
     "resolveJsonModule": true // Allow importing JSON files
   },
-  "include": ["server/**/*.ts", "index.ts"], // Specify files or directories to include in the compilation
+  "include": ["server/**/*.ts", "server/index.ts"], // Specify files or directories to include in the compilation
   "exclude": ["node_modules", "dist"] // Specify files or directories to exclude
 }

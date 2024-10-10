@@ -11,14 +11,22 @@ export class SqlDatastore implements DataStore {
   private db!: Database<sqlite3.Database, sqlite3.Statement>;
 
   public async openDb() {
-    this.db = await sqliteOpen({
-      filename: path.join(__dirname, "server", "datastore", "sql", "hacker-news.sqlite"),
-      driver: sqlite3.Database,
-    });
+    try {
+      this.db = await sqliteOpen({
+        filename: path.join(__dirname, "server", "datastore", "sql", "hacker-news.sqlite"),
+        driver: sqlite3.Database,
+      });
+    } catch (error) {
+      console.log("Database Error: ", error);
+    }
 
-    await this.db.migrate({
-      migrationsPath: path.join(__dirname, "server", "datastore", "sql", "migrations"),
-    });
+    try {
+      await this.db.migrate({
+        migrationsPath: path.join(__dirname, "server", "datastore", "sql", "migrations"),
+      });
+    } catch (error) {
+      console.log("Database Error: ", error);
+    }
 
     return this;
   }

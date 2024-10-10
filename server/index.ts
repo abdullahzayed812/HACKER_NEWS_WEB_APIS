@@ -20,8 +20,8 @@ import { signInHandler, signUpHandler } from "./handlers/authHandler";
   app.use(requestLoggerMiddleware);
 
   // Public endpoints.
-  app.use("/v1/signUp", expressAsyncHandler(signUpHandler));
-  app.use("/v1/signIn", expressAsyncHandler(signInHandler));
+  app.post("/v1/signUp", expressAsyncHandler(signUpHandler));
+  app.post("/v1/signIn", expressAsyncHandler(signInHandler));
 
   app.use(authMiddleware);
 
