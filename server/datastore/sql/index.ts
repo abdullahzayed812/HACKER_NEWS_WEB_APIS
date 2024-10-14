@@ -5,20 +5,25 @@ import { DataStore } from "..";
 import { User, Post, Like, Comment } from "../../types/entities";
 
 import path from "path";
+import { SEED_POSTS, SEED_USERS } from "./seeds";
 const __dirname = path.resolve();
 
 export class SqlDatastore implements DataStore {
   private db!: Database<sqlite3.Database, sqlite3.Statement>;
 
-  public async openDb() {
+  public async openDb(dbPath: string) {
     try {
       this.db = await sqliteOpen({
-        filename: path.join(__dirname, "server", "datastore", "sql", "hacker-news.sqlite"),
+        filename: path.join(dbPath),
         driver: sqlite3.Database,
+        mode: sqlite3.OPEN_READWRITE,
       });
     } catch (error) {
       console.log("Database Error: ", error);
+      process.exit(1);
     }
+
+    this.db.run("PRAGMA foreign_keys = ON;");
 
     try {
       await this.db.migrate({
@@ -26,6 +31,22 @@ export class SqlDatastore implements DataStore {
       });
     } catch (error) {
       console.log("Database Error: ", error);
+    }
+
+    if (process.env.ENV === "development") {
+      console.log("Seeding data....");
+
+      SEED_USERS.forEach(async (user) => {
+        const userExists = await this.getUserById(user.id);
+
+        if (!userExists) await this.createUser(user);
+      });
+
+      SEED_POSTS.forEach(async (post) => {
+        const postExists = await this.getPostByUrl(post.url);
+
+        if (!postExists) await this.createPost(post);
+      });
     }
 
     return this;
@@ -74,6 +95,10 @@ export class SqlDatastore implements DataStore {
 
   async getPost(postId: string): Promise<Post | undefined> {
     return await this.db.get<Post>("SELECT * FROM posts WHERE id = ?", postId);
+  }
+
+  async getPostByUrl(url: string): Promise<Post | undefined> {
+    return await this.db.get<Post>(`SELECT * FROM posts WHERE url = ?`, url);
   }
 
   async deletePost(postId: string): Promise<void> {
