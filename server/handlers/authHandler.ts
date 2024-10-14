@@ -1,17 +1,11 @@
-import {
-  ExpressHandler,
-  SignInRequest,
-  SignInResponse,
-  SignUpRepose,
-  SignUpRequest,
-} from "../types/apis";
+import { ExpressHandler, SignInRequest, SignInResponse, SignUpRequest } from "../types/apis";
 import { signJwt } from "../utilities/auth";
 import { db } from "../datastore";
 import { User } from "../types/entities";
 import crypto from "crypto";
 import { getSalt } from "utilities/env";
 
-export const signUpHandler: ExpressHandler<SignUpRequest, SignUpRepose> = async (req, res) => {
+export const signUpHandler: ExpressHandler<SignUpRequest, SignInResponse> = async (req, res) => {
   const { email, username, password, firstName, lastName } = req.body;
 
   if (!email || !username || !password || !firstName || !lastName) {

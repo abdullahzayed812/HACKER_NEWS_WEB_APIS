@@ -10,6 +10,13 @@ export type ExpressHandler<Req, Res> = RequestHandler<
   any
 >;
 
+export type ExpressHandlerWithParams<Params, Req, Res> = RequestHandler<
+  Partial<Params>,
+  Partial<WithError<Res>>,
+  Partial<Req>,
+  any
+>;
+
 // Post APIs
 export interface ListPostsRequest {}
 export interface ListPostsResponse {
@@ -46,7 +53,7 @@ export type SignUpRequest = Pick<
   User,
   "email" | "firstName" | "lastName" | "password" | "username"
 >;
-export interface SignUpRepose {
+export interface SignUpResponse {
   accessToken: string;
 }
 
@@ -68,7 +75,7 @@ export type GetCurrentUserResponse = Pick<
   "id" | "firstName" | "lastName" | "username" | "email"
 >;
 
-export type UpdateCurrentUserRequest = Partial<Omit<User, "id" | "email">>;
+export type UpdateCurrentUserRequest = Partial<Omit<User, "id" | "email" | "password">>;
 export type UpdateCurrentUserResponse = {};
 
 export type GetUserByEmailRequest = { email: string };

@@ -77,6 +77,16 @@ export class SqlDatastore implements DataStore {
     return await this.db.get<User | undefined>("SELECT * FROM users WHERE username = ?", username);
   }
 
+  async updateCurrentUser(user: Partial<User>): Promise<void> {
+    await this.db.run(
+      "UPDATE users SET username = ?, firstName = ?, lastName = ? WHERE id = ?",
+      user.username,
+      user.firstName,
+      user.lastName,
+      user.id
+    );
+  }
+
   // Post Dao Implementation
   async createPost(post: Post): Promise<void> {
     await this.db.run(
