@@ -9,7 +9,7 @@ import { authMiddleware } from "./middlewares/authMiddleware";
 import { signInHandler, signUpHandler } from "./handlers/authHandler";
 
 (async () => {
-  await initDb();
+  // await initDb();
 
   dotenv.config();
 
