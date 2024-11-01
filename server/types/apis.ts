@@ -85,6 +85,8 @@ export interface GetUserByEmailResponse {
   user: User;
 }
 
+export type GetUserByName {};
+
 export type GetUserByUserNameRequest = {
   username: string;
 };
