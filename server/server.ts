@@ -66,7 +66,7 @@ export async function createServer(logRequests: boolean = true) {
   Object.keys(Endpoints).forEach((entry) => {
     const config = ENDPOINT_CONFIGS[entry as Endpoints];
     const handler = HANDLERS[entry as Endpoints];
-
+    // add configs
     config.auth
       ? app[config.method](
           config.url,
