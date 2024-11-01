@@ -1,6 +1,4 @@
 import express from "express";
-import { initDb } from "./datastore";
-import { createPostHandler, listPostsHandler } from "./handlers/postHandler";
 import expressAsyncHandler from "express-async-handler";
 import dotenv from "dotenv";
 import { requestLoggerMiddleware } from "./middlewares/loggerMiddleware";
@@ -26,8 +24,8 @@ import { signInHandler, signUpHandler } from "./handlers/authHandler";
   app.use(authMiddleware);
 
   // Protected endpoints.
-  app.get("/v1/posts", expressAsyncHandler(listPostsHandler));
-  app.post("/v1/posts", expressAsyncHandler(createPostHandler));
+  // app.get("/v1/posts", expressAsyncHandler(listPostsHandler));
+  // app.post("/v1/posts", expressAsyncHandler(createPostHandler));
 
   app.use(errorHandlerMiddleware);
 

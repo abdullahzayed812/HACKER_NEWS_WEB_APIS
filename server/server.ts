@@ -1,7 +1,9 @@
 import express, { RequestHandler } from "express";
 import cors from "cors";
-import { initDb } from "datastore";
+import { db, initDb } from "datastore";
 import { requestLoggerMiddleware } from "middlewares/loggerMiddleware";
+import { UserHandler } from "handlers/userHandler";
+import { Endpoints } from "utilities/endpoints";
 
 export async function createServer(logRequests: boolean = true) {
   const dbPath = process.env.DB_PATH;
@@ -24,4 +26,31 @@ export async function createServer(logRequests: boolean = true) {
     // log incoming Requests
     app.use(requestLoggerMiddleware);
   }
+
+  const userHandler = new UserHandler(db);
+
+  // map of endpoints handlers
+  const HANDLERS: { [key in Endpoints]: RequestHandler<any, any> } = {
+    [Endpoints.healthy]: (_, res) => res.send({ status: "ok!" }),
+
+    [Endpoints.signIn]: userHandler.signIn,
+    [Endpoints.signUp]: userHandler.signUp,
+    [Endpoints.getUser]: userHandler.getUser,
+    [Endpoints.getCurrentUser]: userHandler.getCurrentUser,
+    [Endpoints.updateCurrentUser]: userHandler.updateCurrentUser,
+
+    // [Endpoints.listPosts]: postHandler.list,
+    // [Endpoints.getPost]: postHandler.get,
+    // [Endpoints.createPost]: postHandler.create,
+    // [Endpoints.deletePost]: postHandler.delete,
+
+    // [Endpoints.listLikes]: likeHandler.list,
+    // [Endpoints.createLike]: likeHandler.create,
+    // [Endpoints.deleteLike]: likeHandler.delete,
+
+    // [Endpoints.countComments]: commentHandler.count,
+    // [Endpoints.listComments]: commentHandler.list,
+    // [Endpoints.createComment]: commentHandler.create,
+    // [Endpoints.deleteComment]: commentHandler.delete,
+  };
 }

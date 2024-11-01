@@ -99,12 +99,24 @@ export class SqlDatastore implements DataStore {
     );
   }
 
-  async listPosts(): Promise<Post[]> {
-    return await this.db.all<Post[]>("SELECT * FROM posts");
+  async listPosts(userId?: string): Promise<Post[]> {
+    return await this.db.all<Post[]>(
+      `SELECT *, EXISTS(
+        SELECT 1 FROM likes WHERE likes.postId = posts.id AND likes.userId = ?
+      ) as liked FROM posts ORDER BY postedAt DESC`,
+      userId
+    );
   }
 
-  async getPost(postId: string): Promise<Post | undefined> {
-    return await this.db.get<Post>("SELECT * FROM posts WHERE id = ?", postId);
+  async getPost(id: string, userId: string): Promise<Post | undefined> {
+    return await this.db.get<Post>(
+      `SELECT *, EXISTS(
+        SELECT 1 FROM likes WHERE likes.postId = ? AND likes.userId = ?
+      ) as liked FROM posts WHERE id = ?`,
+      id,
+      userId,
+      id
+    );
   }
 
   async getPostByUrl(url: string): Promise<Post | undefined> {

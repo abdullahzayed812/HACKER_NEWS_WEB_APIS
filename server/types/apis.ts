@@ -27,7 +27,9 @@ export interface CreatePostResponse {}
 export interface GetPostRequest {
   post: Post;
 }
-export interface GetPostResponse {}
+export interface GetPostResponse {
+  post: Post;
+}
 export interface DeletePostRequest {
   postId: string;
 }
