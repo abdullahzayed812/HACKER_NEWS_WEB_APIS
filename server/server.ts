@@ -3,12 +3,10 @@ import cors from "cors";
 import { db, initDb } from "datastore";
 import { requestLoggerMiddleware } from "middlewares/loggerMiddleware";
 import { UserHandler } from "handlers/userHandler";
-import { ENDPOINT_CONFIGS, Endpoints } from "utilities/endpoints";
+import { Endpoints } from "utilities/endpoints";
 import { PostHandler } from "handlers/postHandler";
 import { LikeHandler } from "handlers/likeHandler";
 import { CommentHandler } from "handlers/commentHandler";
-import { errorHandlerMiddleware } from "middlewares/errorMiddleware";
-import expressAsyncHandler from "express-async-handler";
 
 export async function createServer(logRequests: boolean = true) {
   const dbPath = process.env.DB_PATH;
@@ -61,30 +59,4 @@ export async function createServer(logRequests: boolean = true) {
     [Endpoints.createComment]: commentHandler.create,
     [Endpoints.deleteComment]: commentHandler.delete,
   };
-
-  // register handlers in express
-  Object.keys(Endpoints).forEach((entry) => {
-    const config = ENDPOINT_CONFIGS[entry as Endpoints];
-    const handler = HANDLERS[entry as Endpoints];
-    // add configs
-    config.auth
-      ? app[config.method](
-          config.url,
-          jwtParseMiddleware,
-          enforceJwtMiddleware,
-          expressAsyncHandler(handler)
-        )
-      : app[config.method](config.url, jwtParseMiddleware, expressAsyncHandler(handler));
-  });
-
-  app.use(errorHandlerMiddleware);
-
-  // start server, https in production, otherwise http.
-  const { ENV } = process.env;
-
-  if (!ENV) {
-    throw "Environment not defined, make sure to pass in env vars or have a .env file at root.";
-  }
-
-  return app;
 }
