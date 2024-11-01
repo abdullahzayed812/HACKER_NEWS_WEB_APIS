@@ -3,7 +3,12 @@ import cors from "cors";
 import { db, initDb } from "datastore";
 import { requestLoggerMiddleware } from "middlewares/loggerMiddleware";
 import { UserHandler } from "handlers/userHandler";
-import { Endpoints } from "utilities/endpoints";
+import { ENDPOINT_CONFIGS, Endpoints } from "utilities/endpoints";
+import { PostHandler } from "handlers/postHandler";
+import { LikeHandler } from "handlers/likeHandler";
+import { CommentHandler } from "handlers/commentHandler";
+import { errorHandlerMiddleware } from "middlewares/errorMiddleware";
+import expressAsyncHandler from "express-async-handler";
 
 export async function createServer(logRequests: boolean = true) {
   const dbPath = process.env.DB_PATH;
@@ -28,6 +33,9 @@ export async function createServer(logRequests: boolean = true) {
   }
 
   const userHandler = new UserHandler(db);
+  const postHandler = new PostHandler(db);
+  const likeHandler = new LikeHandler(db);
+  const commentHandler = new CommentHandler(db);
 
   // map of endpoints handlers
   const HANDLERS: { [key in Endpoints]: RequestHandler<any, any> } = {
@@ -39,18 +47,44 @@ export async function createServer(logRequests: boolean = true) {
     [Endpoints.getCurrentUser]: userHandler.getCurrentUser,
     [Endpoints.updateCurrentUser]: userHandler.updateCurrentUser,
 
-    // [Endpoints.listPosts]: postHandler.list,
-    // [Endpoints.getPost]: postHandler.get,
-    // [Endpoints.createPost]: postHandler.create,
-    // [Endpoints.deletePost]: postHandler.delete,
+    [Endpoints.listPosts]: postHandler.list,
+    [Endpoints.getPost]: postHandler.get,
+    [Endpoints.createPost]: postHandler.create,
+    [Endpoints.deletePost]: postHandler.delete,
 
-    // [Endpoints.listLikes]: likeHandler.list,
-    // [Endpoints.createLike]: likeHandler.create,
-    // [Endpoints.deleteLike]: likeHandler.delete,
+    [Endpoints.listLikes]: likeHandler.list,
+    [Endpoints.createLike]: likeHandler.create,
+    [Endpoints.deleteLike]: likeHandler.delete,
 
-    // [Endpoints.countComments]: commentHandler.count,
-    // [Endpoints.listComments]: commentHandler.list,
-    // [Endpoints.createComment]: commentHandler.create,
-    // [Endpoints.deleteComment]: commentHandler.delete,
+    [Endpoints.countComments]: commentHandler.count,
+    [Endpoints.listComments]: commentHandler.list,
+    [Endpoints.createComment]: commentHandler.create,
+    [Endpoints.deleteComment]: commentHandler.delete,
   };
+
+  // register handlers in express
+  Object.keys(Endpoints).forEach((entry) => {
+    const config = ENDPOINT_CONFIGS[entry as Endpoints];
+    const handler = HANDLERS[entry as Endpoints];
+
+    config.auth
+      ? app[config.method](
+          config.url,
+          jwtParseMiddleware,
+          enforceJwtMiddleware,
+          expressAsyncHandler(handler)
+        )
+      : app[config.method](config.url, jwtParseMiddleware, expressAsyncHandler(handler));
+  });
+
+  app.use(errorHandlerMiddleware);
+
+  // start server, https in production, otherwise http.
+  const { ENV } = process.env;
+
+  if (!ENV) {
+    throw "Environment not defined, make sure to pass in env vars or have a .env file at root.";
+  }
+
+  return app;
 }

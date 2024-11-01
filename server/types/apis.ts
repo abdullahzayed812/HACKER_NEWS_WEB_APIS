@@ -39,7 +39,7 @@ export interface DeletePostResponse {}
 export type CreateCommentRequest = Pick<Comment, "comment">;
 export interface CreateCommentResponse {}
 export type CountCommentsRequest = { postId: string };
-export type CountCommentResponse = { count: number };
+export type CountCommentsResponse = { count: number };
 export interface ListCommentsResponse {
   comments: Comment[];
 }
@@ -84,8 +84,6 @@ export type GetUserByEmailRequest = { email: string };
 export interface GetUserByEmailResponse {
   user: User;
 }
-
-export type GetUserByName {};
 
 export type GetUserByUserNameRequest = {
   username: string;

@@ -132,6 +132,33 @@ export class SqlDatastore implements DataStore {
     await this.db.run("INSERT INTO likes (userId, postId) VALUES(?,?)", like.userId, like.postId);
   }
 
+  async deleteLike(like: Like): Promise<void> {
+    await this.db.run(
+      "DELETE FROM likes WHERE userId = ? AND postId = ?",
+      like.userId,
+      like.postId
+    );
+  }
+
+  async getLikes(postId: string): Promise<number> {
+    const result = await this.db.get<{ count: number }>(
+      "SELECT COUNT(*) as count FROM likes WHERE postId = ?",
+      postId
+    );
+
+    return result?.count ?? 0;
+  }
+
+  async likeExists(like: Like): Promise<boolean> {
+    const isExists = await this.db.get<number>(
+      "SELECT 1 FROM likes WHERE postId = ? and userId = ?",
+      like.postId,
+      like.userId
+    );
+
+    return isExists === undefined ? false : true;
+  }
+
   // Comment Dao Implementation
   async createComment(comment: Comment): Promise<void> {
     await this.db.run(
@@ -144,11 +171,23 @@ export class SqlDatastore implements DataStore {
     );
   }
 
-  async listComments(): Promise<Comment[]> {
-    return await this.db.all<Comment[]>("SELECT * FROM comments");
+  async listComments(postId: string): Promise<Comment[]> {
+    return await this.db.all<Comment[]>(
+      "SELECT * FROM comments WHERE postId = ? ORDER BY postedAt DESC",
+      postId
+    );
   }
 
   async deleteComment(commentId: string): Promise<void> {
     await this.db.run("DELETE FROM comments WHERE id = ?", commentId);
+  }
+
+  async countComments(postId: string): Promise<number> {
+    const result = await this.db.get<{ count: number }>(
+      "SELECT COUNT(*) as count FROM comments WHERE postId = ?",
+      postId
+    );
+
+    return result?.count ?? 0;
   }
 }

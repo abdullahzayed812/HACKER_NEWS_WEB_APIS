@@ -1,10 +1,8 @@
 import express from "express";
-import expressAsyncHandler from "express-async-handler";
 import dotenv from "dotenv";
 import { requestLoggerMiddleware } from "./middlewares/loggerMiddleware";
 import { errorHandlerMiddleware } from "./middlewares/errorMiddleware";
 import { authMiddleware } from "./middlewares/authMiddleware";
-import { signInHandler, signUpHandler } from "./handlers/authHandler";
 
 (async () => {
   // await initDb();
@@ -18,8 +16,8 @@ import { signInHandler, signUpHandler } from "./handlers/authHandler";
   app.use(requestLoggerMiddleware);
 
   // Public endpoints.
-  app.post("/v1/signUp", expressAsyncHandler(signUpHandler));
-  app.post("/v1/signIn", expressAsyncHandler(signInHandler));
+  // app.post("/v1/signUp", expressAsyncHandler(signUpHandler));
+  // app.post("/v1/signIn", expressAsyncHandler(signInHandler));
 
   app.use(authMiddleware);
 
