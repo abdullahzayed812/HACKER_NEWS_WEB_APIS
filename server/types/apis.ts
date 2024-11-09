@@ -1,6 +1,10 @@
 import { RequestHandler } from "express";
 import { Post, User, Comment } from "./entities";
 
+export interface JwtPayload {
+  userId: string;
+}
+
 export type WithError<T> = T & { error: string };
 
 export type ExpressHandler<Req, Res> = RequestHandler<

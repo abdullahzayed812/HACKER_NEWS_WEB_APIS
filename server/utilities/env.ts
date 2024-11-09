@@ -11,9 +11,11 @@ export function getJwtSecret(): string {
 
 export function getSalt(): string {
   const salt = process.env.PASSWORD_SALT;
+
   if (!salt) {
     console.error("Missing Password salt");
     process.exit(1);
   }
+
   return salt!;
 }
