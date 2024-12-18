@@ -1,6 +1,6 @@
-import { JwtPayload } from "../types/entities";
 import jwt from "jsonwebtoken";
 import { getJwtSecret } from "./env";
+import { JwtPayload } from "types/apis";
 
 const { sign, verify } = jwt;
 
