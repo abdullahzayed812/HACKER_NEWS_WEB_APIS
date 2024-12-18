@@ -27,7 +27,3 @@ export interface Comment {
   comment: string;
   postedAt: number;
 }
-
-export interface JwtPayload {
-  userId: string;
-}

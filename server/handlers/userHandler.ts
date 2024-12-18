@@ -74,13 +74,11 @@ export class UserHandler implements UserHandlerProps {
     }
 
     const usernameExists = await this.db.getUserByUsername(username);
-
     const userEmailExits = await this.db.getUserByEmail(email);
 
     if (usernameExists) {
       return res.status(403).send({ error: ERRORS.DUPLICATE_USERNAME });
     }
-
     if (userEmailExits) {
       return res.status(403).send({ error: ERRORS.DUPLICATE_EMAIL });
     }

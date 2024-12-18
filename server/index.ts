@@ -1,31 +1,18 @@
-import express from "express";
 import dotenv from "dotenv";
-import { requestLoggerMiddleware } from "./middlewares/loggerMiddleware";
-import { errorHandlerMiddleware } from "./middlewares/errorMiddleware";
-import { authMiddleware } from "./middlewares/authMiddleware";
+import { createServer } from "./server";
 
 (async () => {
-  // await initDb();
-
+  // read .env file.
   dotenv.config();
 
-  const app = express();
-  const PORT = 3000;
+  const { ENV, PORT } = process.env;
 
-  app.use(express.json());
-  app.use(requestLoggerMiddleware);
+  if (!ENV || !PORT) {
+    console.error("Missing some required env variables.");
+    process.exit(1);
+  }
 
-  // Public endpoints.
-  // app.post("/v1/signUp", expressAsyncHandler(signUpHandler));
-  // app.post("/v1/signIn", expressAsyncHandler(signInHandler));
+  const server = await createServer();
 
-  app.use(authMiddleware);
-
-  // Protected endpoints.
-  // app.get("/v1/posts", expressAsyncHandler(listPostsHandler));
-  // app.post("/v1/posts", expressAsyncHandler(createPostHandler));
-
-  app.use(errorHandlerMiddleware);
-
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  server.listen(PORT, () => console.log(`Listening on port ${PORT} in ${ENV} environment.`));
 })();

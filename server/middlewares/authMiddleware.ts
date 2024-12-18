@@ -1,27 +1,45 @@
 import { verifyJwt } from "../utilities/auth";
 import { db } from "../datastore";
-import { ExpressHandler } from "../types/apis";
+import { ExpressHandler, JwtPayload } from "../types/apis";
+import { TokenExpiredError, VerifyErrors } from "jsonwebtoken";
+import { ERRORS } from "utilities/errors";
 
-export const authMiddleware: ExpressHandler<any, any> = async (req, res, next) => {
-  const token = req.headers.authorization;
+export const jwtParseMiddleware: ExpressHandler<any, any> = async (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    res.status(401).send({ error: "No token exist, please check it and try again." }); // Unauthorized
+    return next();
   }
+
+  let jwtPayload: JwtPayload;
 
   try {
-    const { userId } = verifyJwt(token!);
-    const user = await db.getUserById(userId);
+    jwtPayload = verifyJwt(token);
+  } catch (error) {
+    const verifyError = error as VerifyErrors;
 
-    if (!user) {
-      throw new Error("User not found.");
+    if (verifyError instanceof TokenExpiredError) {
+      return res.status(401).send({ error: ERRORS.TOKEN_EXPIRED });
     }
 
-    res.locals.userId = userId;
-
-    next();
-  } catch (error) {
-    console.error(error);
-    res.status(401).send({ error: "Bad token" });
+    return res.status(401).send({ error: ERRORS.BAD_TOKEN });
   }
+
+  const user = await db.getUserById(jwtPayload.userId);
+
+  if (!user) {
+    return res.status(401).send({ error: ERRORS.USER_NOT_FOUND });
+  }
+
+  res.locals.userId = user.id;
+
+  return next();
+};
+
+export const enforceJwtMiddleware: ExpressHandler<any, any> = async (_, res, next) => {
+  if (!res.locals.userId) {
+    return res.sendStatus(401);
+  }
+
+  return next();
 };

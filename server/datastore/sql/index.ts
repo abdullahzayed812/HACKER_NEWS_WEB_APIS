@@ -64,19 +64,15 @@ export class SqlDatastore implements DataStore {
       user.lastName
     );
   }
-
   async getUserById(id: string): Promise<User | undefined> {
     return await this.db.get<User | undefined>("SELECT * FROM users WHERE id = ?", id);
   }
-
   async getUserByEmail(email: string): Promise<User | undefined> {
     return await this.db.get<User | undefined>("SELECT * FROM users WHERE email = ?", email);
   }
-
   async getUserByUsername(username: string): Promise<User | undefined> {
     return await this.db.get<User | undefined>("SELECT * FROM users WHERE username = ?", username);
   }
-
   async updateCurrentUser(user: Partial<User>): Promise<void> {
     await this.db.run(
       "UPDATE users SET username = ?, firstName = ?, lastName = ? WHERE id = ?",
@@ -98,7 +94,6 @@ export class SqlDatastore implements DataStore {
       post.postedAt
     );
   }
-
   async listPosts(userId?: string): Promise<Post[]> {
     return await this.db.all<Post[]>(
       `SELECT *, EXISTS(
@@ -107,22 +102,19 @@ export class SqlDatastore implements DataStore {
       userId
     );
   }
-
-  async getPost(id: string, userId: string): Promise<Post | undefined> {
+  async getPost(postId: string, userId: string): Promise<Post | undefined> {
     return await this.db.get<Post>(
       `SELECT *, EXISTS(
         SELECT 1 FROM likes WHERE likes.postId = ? AND likes.userId = ?
       ) as liked FROM posts WHERE id = ?`,
-      id,
+      postId,
       userId,
-      id
+      postId
     );
   }
-
   async getPostByUrl(url: string): Promise<Post | undefined> {
     return await this.db.get<Post>(`SELECT * FROM posts WHERE url = ?`, url);
   }
-
   async deletePost(postId: string): Promise<void> {
     await this.db.run("DELETE FROM posts WHERE id = ?", postId);
   }
