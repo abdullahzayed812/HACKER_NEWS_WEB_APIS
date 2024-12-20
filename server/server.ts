@@ -10,6 +10,8 @@ import { CommentHandler } from "handlers/commentHandler";
 import { enforceJwtMiddleware, jwtParseMiddleware } from "middlewares/authMiddleware";
 import expressAsyncHandler from "express-async-handler";
 import { errorHandlerMiddleware } from "middlewares/errorMiddleware";
+import { corsOptions } from "configs/corsOptions";
+import { credentialsMiddleware } from "middlewares/credentialsMiddleware";
 
 export async function createServer(logRequests: boolean = true) {
   const dbPath = process.env.DB_PATH;
@@ -26,7 +28,10 @@ export async function createServer(logRequests: boolean = true) {
 
   // middlewares for parsing JSON payloads and opening up cors policy
   app.use(express.json());
-  app.use(cors());
+  // Cross origin resource sharing
+  app.use(cors(corsOptions));
+  // Access Control Allow Credentials
+  app.use(credentialsMiddleware);
 
   if (logRequests) {
     // log incoming Requests
