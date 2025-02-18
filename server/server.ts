@@ -12,9 +12,12 @@ import expressAsyncHandler from "express-async-handler";
 import { errorHandlerMiddleware } from "middlewares/errorMiddleware";
 import { corsOptions } from "configs/corsOptions";
 import { credentialsMiddleware } from "middlewares/credentialsMiddleware";
+import path from "path";
 
 export async function createServer(logRequests: boolean = true) {
   const dbPath = process.env.DB_PATH;
+
+  console.log("DB Path:", path.resolve(dbPath!));
 
   if (!dbPath) {
     console.error("DB_PATH env variable is missing.");
